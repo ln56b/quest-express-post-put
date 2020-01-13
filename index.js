@@ -45,6 +45,13 @@ app.post('/api/users', [
   const formData = req.body;
   return connection.query('INSERT INTO user SET ?', formData, (err, results) => {
     if (err) {
+      // MySQL reports a duplicate entry
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({
+          error: 'Email already exists',
+        });
+      }
+      // Other errors
       res.status(500).json({
         error: err.message,
         sql: err.sql,
