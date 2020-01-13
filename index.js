@@ -25,6 +25,21 @@ app.get('/api/users', (req, res) => {
   });
 });
 
+// POST user
+app.post('/api/users', (req, res) => {
+  const formData = req.body;
+  connection.query('INSERT INTO user SET ?', formData, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err.message,
+        sql: err.sql,
+      });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.listen(process.env.PORT, (err) => {
   if (err) {
     throw new Error('Something bad happened...');
